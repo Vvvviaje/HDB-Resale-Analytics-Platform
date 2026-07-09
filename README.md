@@ -1,118 +1,161 @@
 # Singapore HDB Resale Analytics Platform
 
-## Government Open Data Analytics with Machine Learning and Blockchain-inspired Data Integrity Verification
+A Spring Boot based data analytics platform for collecting, analysing and verifying Singapore HDB resale transactions using government open data, statistical learning and blockchain-inspired integrity verification.
 
 ---
 
 ## Project Overview
 
-The Singapore HDB Resale Analytics Platform is a Spring Boot based backend application that automatically collects Singapore Housing Development Board (HDB) resale transaction data from the official **data.gov.sg Open Data API**, stores the data locally, performs statistical price prediction using Multiple Linear Regression, and verifies historical data integrity using a SHA-256 Merkle Tree.
+The Singapore HDB Resale Analytics Platform is a backend application developed using Spring Boot.
 
-Rather than focusing only on data storage, this project demonstrates an end-to-end data pipeline covering data acquisition, persistence, analytics, integrity verification, and decision support.
+The system automatically retrieves HDB resale transaction data from the official Singapore Government Open Data API (data.gov.sg), stores the records in a local H2 database, provides historical transaction analytics, predicts resale prices using Multiple Linear Regression, and verifies transaction integrity through a SHA-256 based Merkle Tree.
 
-The project combines concepts from software engineering, data analytics, blockchain-inspired verification, and information supply chain management into a unified system.
-
----
-
-# Motivation
-
-Public housing transaction data is continuously updated by the Singapore Government.
-
-For analysts and decision makers, simply storing the data is insufficient.
-
-A complete analytics platform should be able to
-
-* continuously synchronize new transactions
-* prevent duplicate records
-* maintain historical transaction chains
-* estimate market prices
-* verify historical data integrity
-* provide reliable information for future decision making
-
-This project was developed to demonstrate how these functions can be integrated into a modern backend platform.
+Although this project focuses on real estate analytics, its architecture follows the concept of an **Information Supply Chain**, where raw government data is transformed into reliable business intelligence through multiple processing stages.
 
 ---
 
-# Key Features
+# System Architecture
 
-### Automated Government Data Collection
+```text
+                    data.gov.sg Open Data API
+                              │
+                              ▼
+                  HdbDataFetchService
+             (Scheduled / Manual Synchronization)
+                              │
+                              ▼
+                        H2 Database
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+ Historical Query     Price Regression      Merkle Tree
+    Service               Service             Service
+        └─────────────────────┼─────────────────────┘
+                              ▼
+                    Spring Boot REST APIs
+                              │
+                              ▼
+                        Client / Frontend
+```
 
-* Retrieve HDB resale transactions directly from data.gov.sg
-* Incremental synchronization using offset-based pagination
-* Duplicate prevention through unique sourceId validation
-* Daily scheduled synchronization using Spring Scheduler
+The project follows a layered architecture consisting of:
 
----
+- Controller Layer
+- Service Layer
+- Repository Layer
+- Database Layer
 
-### Local Database Persistence
-
-* H2 embedded database
-* Spring Data JPA ORM
-* Automatic schema generation
-* Lightweight deployment without PostgreSQL installation
-
----
-
-### Historical Transaction Analytics
-
-Users can query
-
-* recent transactions
-* transactions by town
-* complete historical resale chains for a specific property
-
-This enables trend analysis for individual HDB units across multiple years.
-
----
-
-### Machine Learning Price Prediction
-
-The platform trains an Ordinary Least Squares Multiple Linear Regression model using historical transaction records.
-
-Independent variables include
-
-* Floor Area
-* Storey Midpoint
-* Mature Estate Flag
-
-Dependent variable
-
-* Resale Price
-
-The trained model can estimate the resale price of unseen properties through REST APIs.
+This separation improves maintainability, scalability and future extensibility.
 
 ---
 
-### Blockchain-inspired Data Integrity Verification
+# Information Flow
 
-Instead of implementing a public blockchain network, this project adopts blockchain-inspired concepts to verify transaction integrity.
+```text
+Government Open Data
+          │
+          ▼
+Data Acquisition
+          │
+          ▼
+Data Cleaning
+          │
+          ▼
+Local Database
+          │
+          ▼
+Historical Analytics
+          │
+          ▼
+Machine Learning Prediction
+          │
+          ▼
+Integrity Verification
+          │
+          ▼
+Decision Support
+```
 
-For each day's newly collected transactions
+Instead of directly analysing raw government data, the platform progressively transforms information into decision-support knowledge.
 
-* SHA-256 hashes are generated
-* Leaf nodes form a Merkle Tree
-* Root Hash is permanently stored
-* Individual transactions can later be verified through Merkle Proof reconstruction
+This processing pipeline resembles an **Information Supply Chain**, where data continuously flows through multiple value-added stages.
 
-This provides efficient tamper-evident verification while maintaining low computational overhead.
+---
+
+# Machine Learning Pipeline
+
+```text
+Historical Transactions
+          │
+          ▼
+Feature Engineering
+(Floor Area,
+Storey Level,
+Mature Estate)
+          │
+          ▼
+OLS Multiple Linear Regression
+          │
+          ▼
+Model Training
+          │
+          ▼
+Price Prediction
+```
+
+The prediction model uses Ordinary Least Squares Multiple Linear Regression.
+
+Independent variables include:
+
+- Floor Area
+- Storey Midpoint
+- Mature Estate Indicator
+
+Dependent variable:
+
+- Resale Price
+
+Model quality is evaluated using the coefficient of determination (R²).
+
+---
+
+# Merkle Tree Verification
+
+```text
+                    Root Hash
+                  /           \
+              Hash12         Hash34
+             /     \        /      \
+          Hash1   Hash2   Hash3   Hash4
+            │        │       │        │
+           Tx1      Tx2     Tx3      Tx4
+```
+
+To guarantee data integrity, every transaction is converted into a SHA-256 hash.
+
+Transactions collected on the same day are grouped into a Merkle Tree.
+
+The generated Root Hash is stored in the database for future verification.
+
+Given any transaction, the system can reconstruct the Merkle Proof and verify whether the transaction has been modified.
 
 ---
 
 # Supply Chain Perspective
 
-Although the dataset originates from the real estate market rather than logistics, the system follows the architecture of an information supply chain.
+Although the application analyses housing transactions, its system design follows an **Information Supply Chain**.
 
-```
-Government Open Data
+```text
+Raw Government Data
         │
         ▼
-Data Acquisition
+Collection
         │
         ▼
-Data Storage
+Storage
         │
         ▼
-Data Analytics
+Analytics
         │
         ▼
 Integrity Verification
@@ -121,197 +164,142 @@ Integrity Verification
 Decision Support
 ```
 
-Each stage transforms raw information into higher-value knowledge.
+From a supply chain perspective:
 
-This mirrors modern digital supply chain systems where data quality, traceability, and reliability are essential for operational decision making.
+- Government data is treated as the upstream information source.
+- Data processing represents value-added transformation.
+- Machine learning generates predictive intelligence.
+- Blockchain-inspired verification ensures information reliability.
+- REST APIs deliver trustworthy data to downstream applications.
 
----
-
-# System Architecture
-
-```
-                    data.gov.sg API
-                           │
-                           ▼
-                HdbDataFetchService
-                           │
-                           ▼
-                     H2 Database
-               ┌────────┼────────┐
-               │        │        │
-               ▼        ▼        ▼
-      History Query   ML Model  Merkle Tree
-               │        │        │
-               └────────┼────────┘
-                        ▼
-               Spring Boot REST API
-                        │
-                        ▼
-                     Frontend
-```
+This architecture demonstrates how supply chain principles can be applied beyond physical logistics to digital information management.
 
 ---
 
 # Technology Stack
 
-| Layer            | Technology            |
-| ---------------- | --------------------- |
-| Backend          | Spring Boot 3         |
-| Language         | Java 21               |
-| Database         | H2 Database           |
-| ORM              | Spring Data JPA       |
-| Scheduler        | Spring Scheduling     |
-| Machine Learning | Apache Commons Math   |
-| Blockchain       | SHA-256 + Merkle Tree |
-| Build Tool       | Maven                 |
-| API              | RESTful API           |
+| Component | Technology |
+|------------|------------|
+| Language | Java 21 |
+| Framework | Spring Boot 3 |
+| Database | H2 Database |
+| ORM | Spring Data JPA |
+| Machine Learning | Apache Commons Math (OLS Regression) |
+| Data Source | data.gov.sg Open Data API |
+| Integrity Verification | SHA-256 Merkle Tree |
+| Build Tool | Maven |
 
 ---
 
-# Project Structure
-
-```
-src/main/java/com/uraapi
-│
-├── controller
-│   ├── TransactionController
-│   ├── PriceModelController
-│   └── BlockchainController
-│
-├── service
-│   ├── HdbDataFetchService
-│   ├── PriceRegressionService
-│   └── MerkleTreeService
-│
-├── repository
-│
-├── entity
-│
-└── UraApiApplication
-```
-
----
-
-# REST APIs
+# REST API
 
 ## Data Collection
 
-POST `/api/fetch`
+```
+POST /api/fetch?limit=500
+```
 
-Fetch the next batch of HDB resale transactions.
+Fetches the next batch of HDB resale transactions.
 
 ---
 
-## Transaction Query
+## Historical Transactions
 
-GET `/api/transactions`
+```
+GET /api/transactions/recent
+```
 
-Query transactions by town.
+Returns the latest transaction records.
 
-GET `/api/transactions/recent`
+```
+GET /api/transactions?town=BEDOK
+```
 
-Retrieve recently fetched transactions.
+Returns transactions within a specified town.
 
-GET `/api/transactions/chain`
+```
+GET /api/transactions/chain
+```
 
-Retrieve complete historical transaction records for a property.
+Returns historical transactions for a specific property.
 
 ---
 
 ## Machine Learning
 
-POST `/api/model/train`
+```
+POST /api/model/train
+```
 
-Train the regression model using all available historical records.
+Trains the regression model.
 
-GET `/api/model/predict`
+```
+GET /api/model/predict
+```
 
-Predict resale prices using the trained model.
+Predicts resale price.
 
 ---
 
 ## Blockchain Verification
 
-POST `/api/blockchain/build`
+```
+POST /api/blockchain/build
+```
 
-Generate a daily Merkle Root.
+Builds the Merkle Tree for daily transactions.
 
-GET `/api/blockchain/verify/{sourceId}`
+```
+GET /api/blockchain/verify/{sourceId}
+```
 
-Verify transaction integrity through Merkle Proof.
-
----
-
-# Design Decisions
-
-| Decision                   | Reason                                                        |
-| -------------------------- | ------------------------------------------------------------- |
-| H2 Database                | Lightweight deployment without external database installation |
-| Spring Data JPA            | Simplified persistence layer                                  |
-| Multiple Linear Regression | Highly interpretable baseline prediction model                |
-| SHA-256                    | Deterministic cryptographic hashing                           |
-| Merkle Tree                | Efficient integrity verification with logarithmic proof size  |
-| Scheduled Fetch            | Automatic daily synchronization                               |
-| Unique sourceId            | Prevent duplicate government records                          |
+Verifies transaction integrity using a Merkle Proof.
 
 ---
 
-# Challenges
+# Project Structure
 
-### Duplicate Data
-
-Government APIs may return overlapping records.
-
-**Solution**
-
-Unique sourceId validation before insertion.
-
----
-
-### Incremental Synchronization
-
-Only newly published records should be downloaded.
-
-**Solution**
-
-Use repository.count() as pagination offset.
-
----
-
-### Database Keyword Conflict
-
-The column name "month" conflicts with H2 reserved keywords.
-
-**Solution**
-
-Rename the database column to txn_month while preserving the Java field name.
-
----
-
-### Data Integrity
-
-Historical records should remain verifiable after storage.
-
-**Solution**
-
-Generate daily SHA-256 Merkle Trees and verify through Merkle Proof reconstruction.
+```text
+src
+ ├── controller
+ │      REST APIs
+ │
+ ├── service
+ │      Business Logic
+ │
+ ├── repository
+ │      Data Access Layer
+ │
+ ├── entity
+ │      Database Models
+ │
+ └── resources
+        Configuration
+```
 
 ---
 
 # Future Improvements
 
-* PostgreSQL deployment
-* Docker containerization
-* Swagger/OpenAPI documentation
-* Random Forest and XGBoost comparison
-* Interactive dashboard using React
-* Cloud deployment (AWS or Azure)
-* Blockchain smart contract integration
+Possible future extensions include:
+
+- PostgreSQL deployment
+- Docker containerization
+- Cloud deployment (AWS / Azure)
+- React frontend dashboard
+- Random Forest / XGBoost price prediction
+- Smart Contract integration
+- Interactive analytics dashboard
+- GIS-based property visualization
 
 ---
 
-# License
+# Author
 
-This project is intended for academic demonstration and educational purposes.
+Developed as an individual software engineering project for exploring:
 
-The HDB resale transaction dataset is publicly available through Singapore Government Open Data (data.gov.sg).
+- Government Open Data Analytics
+- Machine Learning
+- Information Supply Chain
+- RESTful API Development
+- Blockchain-inspired Data Integrity Verification
