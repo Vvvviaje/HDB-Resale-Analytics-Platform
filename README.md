@@ -1,42 +1,55 @@
-# Singapore HDB Resale Analytics Platform
+# Government Data Intelligence Platform
 
-### Government Open Data Pipeline, Machine Learning Analytics and Blockchain-inspired Data Integrity Verification
+### Case Study: Singapore HDB Resale Market Analytics
 
-A Spring Boot based backend platform for collecting, analysing and verifying Singapore HDB resale transactions using government open data, statistical learning and blockchain-inspired integrity verification.
+A Spring Boot backend platform that transforms Singapore Government Open Data into actionable business intelligence through automated data engineering, statistical learning and cryptographic data integrity verification.
 
 ---
 
 # Project Overview
 
-The Singapore HDB Resale Analytics Platform is a backend application developed using Java and Spring Boot.
+Government Data Intelligence Platform is a backend data intelligence platform developed using Java 21, Spring Boot and Spring Data JPA. It demonstrates an end-to-end data intelligence workflow by collecting, processing, analysing and verifying publicly available government data.
 
-The system automatically retrieves HDB resale transaction data from the official Singapore Government Open Data API (data.gov.sg), stores the records in a local H2 database, provides historical transaction analytics, predicts resale prices using Multiple Linear Regression, and verifies transaction integrity through a SHA-256 based Merkle Tree.
+Using official HDB resale transaction records from the Singapore Government Open Data API (data.gov.sg), the platform automatically synchronises transaction data into a local H2 database, provides historical transaction analytics, trains an Ordinary Least Squares (OLS) Multiple Linear Regression model for resale price prediction, and generates SHA-256 based Merkle Trees to ensure historical data integrity.
 
-Rather than directly analysing raw government data, the project demonstrates how external data can be transformed into actionable business intelligence through a complete information processing pipeline.
+Rather than focusing solely on housing transactions, the project demonstrates how raw government data can be transformed into reliable decision-support intelligence through a complete end-to-end data intelligence pipeline.
 
-The overall architecture integrates:
+The platform integrates multiple data engineering and analytics components:
 
-- Automated data acquisition
-- Persistent data storage
-- Historical analytics
-- Machine learning prediction
-- Blockchain-inspired integrity verification
-- RESTful service delivery
+- Automated government open data acquisition
+- Persistent local database management
+- Historical transaction analytics
+- Statistical learning based price prediction
+- Cryptographic data integrity verification
+- RESTful APIs supporting downstream analytical applications
 
-Although the project focuses on real estate analytics, its architecture closely resembles an **Information Supply Chain**, where information continuously flows through collection, processing, verification and decision support.
+From a systems engineering perspective, the project models an **Information Supply Chain**, where data continuously flows through acquisition, storage, analytics, verification and service delivery. Each processing stage adds value to the original dataset, transforming raw information into trustworthy business intelligence for downstream analytical applications.
+
+---
+
+# Design Objectives
+
+The project was designed with four primary objectives:
+
+- Build an automated government open data ingestion pipeline.
+- Transform raw transactional data into structured analytical datasets.
+- Generate predictive insights using statistical learning.
+- Ensure historical data integrity through cryptographic verification.
+
+These objectives mirror the lifecycle of modern data intelligence systems widely adopted in business analytics, digital transformation and information supply chain management.
 
 ---
 
 # Key Features
 
 - Automated collection of HDB resale transactions from the Singapore Government Open Data API
-- Incremental data synchronization with duplicate prevention
+- Incremental API synchronization with duplicate prevention
 - Local H2 database persistence using Spring Data JPA
-- Historical transaction querying and property price trend analysis
-- Multiple Linear Regression model for resale price prediction
+- Historical transaction querying and trend analysis
+- Statistical learning based resale price prediction
 - SHA-256 based Merkle Tree construction for data integrity verification
 - Daily scheduled synchronization using Spring Scheduler
-- RESTful APIs supporting analytics and verification
+- RESTful APIs supporting analytics and verification services
 - Layered Spring Boot architecture following software engineering best practices
 
 ---
@@ -62,19 +75,19 @@ Although the project focuses on real estate analytics, its architecture closely 
                     Spring Boot REST APIs
                               │
                               ▼
-                        Client / Frontend
+                  Business Applications
 ```
 
-The system adopts a modular layered architecture consisting of Controller, Service, Repository and Database layers.
+The platform adopts a modular layered architecture consisting of Controller, Service, Repository and Database layers.
 
-Each module has a clearly defined responsibility while communicating through service interfaces, improving maintainability, scalability and future extensibility.
+Each module has clearly defined responsibilities while communicating through service interfaces, improving maintainability, scalability and future extensibility.
 
 ---
 
 # Information Flow
 
 ```text
-Government Open Data
+Government Open Data Source
           │
           ▼
 Data Acquisition
@@ -89,7 +102,7 @@ Local Database
 Historical Analytics
           │
           ▼
-Machine Learning Prediction
+Statistical Learning
           │
           ▼
 Integrity Verification
@@ -104,7 +117,7 @@ This processing pipeline resembles an **Information Supply Chain**, where inform
 
 ---
 
-# Machine Learning Pipeline
+# Statistical Learning Pipeline
 
 ```text
 Historical Transactions
@@ -125,7 +138,7 @@ Model Training
 Price Prediction
 ```
 
-The prediction model is built using Ordinary Least Squares (OLS) Multiple Linear Regression.
+The prediction model is implemented using Ordinary Least Squares (OLS) Multiple Linear Regression.
 
 Input features include:
 
@@ -137,13 +150,13 @@ Target variable:
 
 - Resale Price
 
-Unlike black-box machine learning models, OLS regression provides interpretable coefficients, allowing each feature's contribution to housing prices to be analysed.
+Unlike black-box machine learning models, OLS regression produces interpretable coefficients, allowing each feature's contribution to housing prices to be analysed quantitatively.
 
 Model performance is evaluated using the coefficient of determination (R²).
 
 ---
 
-# Blockchain-inspired Data Integrity Verification
+# Cryptographic Data Integrity Verification
 
 ```text
                     Root Hash
@@ -155,13 +168,13 @@ Model performance is evaluated using the coefficient of determination (R²).
            Tx1      Tx2     Tx3      Tx4
 ```
 
-Every transaction is transformed into a SHA-256 hash.
+Each transaction is converted into a SHA-256 hash.
 
-Transactions collected on the same day are grouped into a Merkle Tree.
+Transactions collected on the same day are grouped into a blockchain-inspired Merkle Tree.
 
 The generated Root Hash is stored for future verification.
 
-Given any transaction, the system reconstructs the corresponding Merkle Proof and verifies whether historical data has been modified without requiring the complete dataset.
+Given any transaction, the system reconstructs the corresponding Merkle Proof to verify whether historical data has been modified without requiring the complete dataset.
 
 ---
 
@@ -170,7 +183,7 @@ Given any transaction, the system reconstructs the corresponding Merkle Proof an
 Although the application analyses housing transactions, its overall architecture follows the concept of an Information Supply Chain.
 
 ```text
-Raw Government Data
+Government Open Data
         │
         ▼
 Collection
@@ -190,12 +203,12 @@ Decision Support
 
 From an information supply chain perspective:
 
-- Government Open Data acts as the upstream information supplier.
+- Government Open Data serves as the upstream data source.
 - Data acquisition represents inbound information logistics.
 - Local database storage functions as information inventory.
-- Statistical analysis and machine learning generate value-added processing.
-- Merkle Tree verification serves as information quality assurance.
-- REST APIs deliver trusted analytical results to downstream consumers.
+- Statistical learning generates value-added analytical intelligence.
+- Cryptographic verification ensures information quality and trustworthiness.
+- REST APIs deliver reliable analytical results to downstream applications.
 
 This demonstrates how supply chain principles can be applied beyond physical logistics to digital information management systems.
 
@@ -203,14 +216,14 @@ This demonstrates how supply chain principles can be applied beyond physical log
 
 # Engineering Highlights
 
-- Incremental data synchronization using API pagination
+- Incremental API synchronization using pagination
 - Duplicate prevention through unique transaction identifiers
 - Automated daily synchronization using Spring Scheduler
 - Layered architecture following the Controller-Service-Repository pattern
-- Statistical price prediction using OLS Multiple Linear Regression
+- Predictive analytics using OLS regression
 - SHA-256 Merkle Tree construction for transaction integrity verification
-- RESTful API design supporting historical analytics and predictive services
-- Modular design supporting future cloud deployment and system expansion
+- RESTful API design supporting analytical and predictive services
+- Modular architecture supporting future cloud deployment and system expansion
 
 ---
 
@@ -220,11 +233,12 @@ This demonstrates how supply chain principles can be applied beyond physical log
 |------------|------------|
 | Programming Language | Java 21 |
 | Framework | Spring Boot 3.3 |
-| Database | H2 Database |
 | ORM | Spring Data JPA |
-| Machine Learning | Apache Commons Math (OLS Regression) |
-| Data Source | data.gov.sg Open Data API |
-| Data Integrity | SHA-256 Merkle Tree |
+| Database | H2 Database |
+| HTTP Client | RestTemplate |
+| JSON Parsing | Jackson |
+| Statistical Learning | Apache Commons Math (OLS Regression) |
+| Cryptography | SHA-256 |
 | Scheduling | Spring Scheduler |
 | Build Tool | Maven |
 
@@ -234,7 +248,7 @@ This demonstrates how supply chain principles can be applied beyond physical log
 
 ## Data Collection
 
-```
+```http
 POST /api/fetch?limit=500
 ```
 
@@ -244,19 +258,19 @@ Synchronises the next batch of HDB resale transactions.
 
 ## Historical Analytics
 
-```
+```http
 GET /api/transactions/recent
 ```
 
 Returns the latest transaction records.
 
-```
+```http
 GET /api/transactions?town=BEDOK
 ```
 
 Returns transactions within a specified town.
 
-```
+```http
 GET /api/transactions/chain
 ```
 
@@ -264,15 +278,15 @@ Returns the historical transaction chain of a property.
 
 ---
 
-## Machine Learning
+## Statistical Learning
 
-```
+```http
 POST /api/model/train
 ```
 
 Trains the regression model using historical transactions.
 
-```
+```http
 GET /api/model/predict
 ```
 
@@ -282,17 +296,17 @@ Predicts the resale price of a property.
 
 ## Data Integrity Verification
 
-```
+```http
 POST /api/blockchain/build
 ```
 
 Constructs the daily Merkle Tree.
 
-```
+```http
 GET /api/blockchain/verify/{sourceId}
 ```
 
-Verifies transaction integrity using the Merkle Proof.
+Verifies transaction integrity using the corresponding Merkle Proof.
 
 ---
 
@@ -313,12 +327,12 @@ src
 │      Database models
 │
 └── resources
-       Configuration files
+       Application configuration
 ```
 
 ---
 
-# Future Roadmap
+# Future Enhancements
 
 ### Version 2
 
@@ -330,18 +344,18 @@ src
 
 - React analytics dashboard
 - Interactive GIS property visualization
-- Random Forest and XGBoost price prediction
+- Random Forest and XGBoost prediction models
 
 ### Version 4
 
-- Cloud deployment (AWS / Azure)
-- Smart contract integration
-- Real-time streaming data pipeline
+- Cloud deployment on AWS or Azure
+- Streaming data pipeline
 - Interactive business intelligence dashboard
+- Distributed data processing
 
 ---
 
-# Learning Outcomes
+# Technical Competencies Demonstrated
 
 This project demonstrates practical experience in:
 
@@ -349,9 +363,10 @@ This project demonstrates practical experience in:
 - RESTful API Development
 - Data Engineering
 - Government Open Data Integration
-- Machine Learning for Predictive Analytics
+- Statistical Learning
+- Predictive Analytics
 - Information Supply Chain Design
-- Blockchain-inspired Data Integrity Verification
+- Cryptographic Data Integrity Verification
 - Layered Software Architecture
 - Database Design using Spring Data JPA
 
@@ -359,4 +374,4 @@ This project demonstrates practical experience in:
 
 # Author
 
-Developed as an individual software engineering project for exploring modern backend architecture, machine learning applications, government open data analytics, and blockchain-inspired data integrity verification.
+Developed as an independent software engineering project to explore data engineering, predictive analytics, software architecture and trustworthy data processing using government open data.
