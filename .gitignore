@@ -1,0 +1,2 @@
+# Ignore local H2 database files
+*.db
